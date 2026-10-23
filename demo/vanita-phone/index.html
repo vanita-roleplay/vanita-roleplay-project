@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VANITA ROLEPLAY — Phone</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../shared/vanita.css">
+<script src="../shared/vanita.js"></script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body oncontextmenu="return false">
+<div class="game-stage" id="gameStage">
+
+  <div class="scene"></div>
+
+  <div class="phone-device">
+
+    <!-- Status bar -->
+    <div class="status-bar">
+      <span class="status-time mono" id="statusTime">21:42</span>
+      <div class="status-icons">
+        <i class="icon" id="iconSignal"></i>
+        <i class="icon" id="iconWifi"></i>
+        <i class="icon" id="iconBattery"></i>
+      </div>
+    </div>
+
+    <div class="screen-stack" id="screenStack">
+
+      <!-- ============ HOME ============ -->
+      <section class="phone-screen" data-screen="home">
+        <div class="home-clock">
+          <div class="home-clock-time mono" id="homeClockTime">21:42</div>
+          <div class="home-clock-date" id="homeClockDate">VANITA ROLEPLAY</div>
+        </div>
+        <div class="app-grid" id="appGrid"></div>
+      </section>
+
+      <!-- ============ MESSAGES: conversation list ============ -->
+      <section class="phone-screen" data-screen="messages">
+        <div class="app-header">
+          <button class="app-back" data-back><i class="icon" id="iconBack1"></i></button>
+          <h2>ข้อความ</h2>
+        </div>
+        <div class="conv-list" id="convList"></div>
+      </section>
+
+      <!-- ============ MESSAGES: thread ============ -->
+      <section class="phone-screen" data-screen="thread">
+        <div class="app-header">
+          <button class="app-back" data-back><i class="icon" id="iconBack2"></i></button>
+          <h2 id="threadName">—</h2>
+        </div>
+        <div class="thread-messages" id="threadMessages"></div>
+        <div class="thread-input-row">
+          <input type="text" id="threadInput" class="thread-input" placeholder="พิมพ์ข้อความ...">
+          <button class="thread-send" id="threadSend"><i class="icon" id="iconSend"></i></button>
+        </div>
+      </section>
+
+      <!-- ============ CALLS: recent list ============ -->
+      <section class="phone-screen" data-screen="calls">
+        <div class="app-header">
+          <button class="app-back" data-back><i class="icon" id="iconBack3"></i></button>
+          <h2>โทร</h2>
+        </div>
+
+        <div class="call-tabs">
+          <button class="call-tab is-active" data-tab="keypad">ปุ่มกด</button>
+          <button class="call-tab" data-tab="recent">ล่าสุด</button>
+          <button class="call-tab" data-tab="contacts">รายชื่อ</button>
+        </div>
+
+        <!-- Keypad -->
+        <div class="call-tab-panel is-active" data-panel="keypad">
+          <div class="keypad-display mono" id="keypadDisplay"></div>
+          <div class="keypad-grid" id="keypadGrid"></div>
+          <div class="keypad-actions">
+            <span class="keypad-spacer"></span>
+            <button class="keypad-call-btn" id="btnKeypadCall"><i class="icon" id="iconKeypadCall"></i></button>
+            <button class="keypad-back-btn" id="btnKeypadBack"><i class="icon" id="iconKeypadBack"></i></button>
+          </div>
+        </div>
+
+        <!-- Recent -->
+        <div class="call-tab-panel" data-panel="recent">
+          <div class="call-list" id="callList"></div>
+        </div>
+
+        <!-- Contacts -->
+        <div class="call-tab-panel" data-panel="contacts">
+          <div class="call-list" id="contactList"></div>
+        </div>
+      </section>
+
+      <!-- ============ CALLING (connecting) ============ -->
+      <section class="phone-screen" data-screen="calling">
+        <div class="call-stage">
+          <div class="call-avatar" id="callingAvatar">?</div>
+          <div class="call-name" id="callingName">—</div>
+          <div class="call-sub" id="callingSub">กำลังโทรออก...</div>
+          <div class="call-ring" id="callRing" style="--pct:0">
+            <div class="call-ring-inner"><i class="icon" id="iconRingPhone"></i></div>
+          </div>
+          <button class="call-end-btn" id="btnCancelCall"><i class="icon" id="iconEndCall1"></i></button>
+        </div>
+      </section>
+
+      <!-- ============ IN CALL (active) ============ -->
+      <section class="phone-screen" data-screen="incall">
+        <div class="call-stage">
+          <div class="call-avatar" id="incallAvatar">?</div>
+          <div class="call-name" id="incallName">—</div>
+          <div class="call-sub mono" id="callTimer">00:00</div>
+          <div class="incall-actions">
+            <button class="incall-pill" id="btnMute">เงียบ</button>
+            <button class="incall-pill" id="btnSpeaker">ลำโพง</button>
+          </div>
+          <button class="call-end-btn" id="btnEndCall"><i class="icon" id="iconEndCall2"></i></button>
+        </div>
+      </section>
+
+      <!-- ============ BANK ============ -->
+      <section class="phone-screen" data-screen="bank">
+        <div class="app-header">
+          <button class="app-back" data-back><i class="icon" id="iconBack4"></i></button>
+          <h2>ธนาคาร</h2>
+        </div>
+        <div class="bank-balance-card">
+          <div class="bank-balance-row">
+            <span>เงินสด</span>
+            <span class="mono" id="bankCashValue">$0</span>
+          </div>
+          <div class="bank-balance-row bank-balance-row--main">
+            <span>บัญชีธนาคาร</span>
+            <span class="mono" id="bankAccountValue">$0</span>
+          </div>
+        </div>
+        <div class="bank-form">
+          <label class="vn-field">
+            <span>โอนไปไอดีผู้เล่น</span>
+            <input type="text" inputmode="numeric" id="bankTargetId" class="vn-input mono" placeholder="เช่น 42">
+          </label>
+          <label class="vn-field">
+            <span>จำนวนเงิน</span>
+            <div class="vn-qty-input">
+              <input type="text" inputmode="numeric" id="bankAmount" class="vn-input mono" placeholder="0">
+              <button class="vn-max-btn" id="btnBankMax">MAX</button>
+            </div>
+          </label>
+          <p class="bank-error" id="bankError" hidden>กรอกข้อมูลให้ถูกต้อง</p>
+          <button class="bank-transfer-btn btn btn-primary" id="btnBankTransfer"><i class="icon" id="iconTransfer"></i>โอนเงิน</button>
+        </div>
+      </section>
+
+      <!-- ============ GENERIC LIST APP (social / map / market / housing / services / news / contacts / classifieds / events) ============ -->
+      <section class="phone-screen" data-screen="list">
+        <div class="app-header">
+          <button class="app-back" data-back><i class="icon" id="iconBack7"></i></button>
+          <h2 id="listTitle">—</h2>
+        </div>
+        <div class="list-app-body" id="listBody"></div>
+      </section>
+
+      <!-- ============ CAMERA ============ -->
+      <section class="phone-screen" data-screen="camera">
+        <div class="app-header">
+          <button class="app-back" data-back><i class="icon" id="iconBack5"></i></button>
+          <h2>กล้อง</h2>
+        </div>
+        <div class="camera-viewfinder">
+          <div class="camera-frame-corner tl"></div>
+          <div class="camera-frame-corner tr"></div>
+          <div class="camera-frame-corner bl"></div>
+          <div class="camera-frame-corner br"></div>
+          <p class="camera-hint">พรีวิวกล้อง (จำลอง)</p>
+        </div>
+        <div class="camera-controls">
+          <button class="camera-shutter" id="btnShutter"></button>
+        </div>
+      </section>
+
+      <!-- ============ SETTINGS ============ -->
+      <section class="phone-screen" data-screen="settings">
+        <div class="app-header">
+          <button class="app-back" data-back><i class="icon" id="iconBack6"></i></button>
+          <h2>ตั้งค่า</h2>
+        </div>
+        <div class="settings-list">
+          <div class="settings-row">
+            <div class="settings-row-icon settings-row-icon--gray"><i class="icon" id="iconSettingsPlane"></i></div>
+            <span class="settings-row-label">โหมดบนเครื่องบิน</span>
+            <button class="settings-toggle" data-setting="airplane"></button>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-icon settings-row-icon--purple"><i class="icon" id="iconSettingsDnd"></i></div>
+            <span class="settings-row-label">ห้ามรบกวน</span>
+            <button class="settings-toggle" data-setting="dnd"></button>
+          </div>
+          <div class="settings-row">
+            <div class="settings-row-icon settings-row-icon--blue"><i class="icon" id="iconSettingsRing"></i></div>
+            <span class="settings-row-label">เสียงเรียกเข้า</span>
+            <button class="settings-toggle is-on" data-setting="ringtone"></button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <button class="home-indicator" id="homeIndicator" title="กลับหน้าหลัก"></button>
+  </div>
+
+  <!-- ============ TRANSFER PROGRESS OVERLAY ============ -->
+
+  <div class="transfer-overlay vn-overlay" id="transferOverlay" hidden>
+    <div class="transfer-ring" id="transferRing" style="--pct:0">
+      <div class="transfer-ring-inner"><i class="icon" id="iconTransferRing"></i></div>
+    </div>
+    <div class="transfer-label">กำลังโอนเงิน...</div>
+  </div>
+
+  <div class="toast-stack" id="toastStack"></div>
+
+</div><!-- /.game-stage -->
+
+<script src="js/app.js"></script>
+</body>
+</html>

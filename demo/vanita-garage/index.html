@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VANITA ROLEPLAY — Garage</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../shared/vanita.css">
+<script src="../shared/vanita.js"></script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body oncontextmenu="return false">
+<div class="game-stage" id="gameStage">
+
+  <div class="scene"></div>
+
+  <div class="garage-wrap" id="garageWrap">
+
+    <!-- ============ HEADER ============ -->
+    <div class="vn-header angled-panel">
+      <div class="vn-brand">
+        <img src="../shared/vanita-logo@2x.png" alt="VANITA ROLEPLAY" class="vn-logo">
+      </div>
+      <div class="vn-title-block">
+        <h1 class="vn-title">GARAGE</h1>
+        <p class="vn-subtitle">YOUR VEHICLES &nbsp;/&nbsp; VANITA ROLEPLAY</p>
+      </div>
+      <div class="gr-cash">
+        <i class="icon" id="iconCash"></i>
+        <span class="mono" id="cashValue">$125,420</span>
+      </div>
+    </div>
+
+    <!-- ============ BODY ============ -->
+    <div class="gr-body">
+
+      <!-- Vehicle list -->
+      <div class="gr-list" id="vehicleList"></div>
+
+      <!-- Vehicle detail / stage -->
+      <div class="gr-stage">
+        <div class="gr-stage-bg"></div>
+        <div class="gr-stage-content" id="stageContent"></div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ============ TOASTS ============ -->
+  <div class="toast-stack" id="toastStack"></div>
+
+  <!-- ============ ACTION PROGRESS OVERLAY ============ -->
+  <div class="progress-overlay vn-overlay" id="progressOverlay" hidden>
+    <div class="progress-card vn-card">
+      <div class="progress-ring" id="progressRing" style="--pct:0">
+        <div class="progress-ring-inner">
+          <i class="icon" id="progressIcon"></i>
+        </div>
+      </div>
+      <div class="progress-pct mono" id="progressPct">0%</div>
+      <div class="progress-label" id="progressLabel">กำลังทำงาน</div>
+      <div class="progress-underline" id="progressUnderline"></div>
+      <button class="progress-cancel" id="progressCancel">ยกเลิก</button>
+    </div>
+  </div>
+
+</div><!-- /.game-stage -->
+
+<script src="js/app.js"></script>
+</body>
+</html>

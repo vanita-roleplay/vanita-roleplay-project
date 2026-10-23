@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VANITA ROLEPLAY — Inventory</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../shared/vanita.css">
+<script src="../shared/vanita.js"></script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="game-stage" id="gameStage">
+
+  <!-- Gameplay backdrop stand-in -->
+  <div class="scene"></div>
+
+  <div class="inv-wrap" id="invWrap">
+
+    <!-- ============ HEADER ============ -->
+    <div class="vn-header angled-panel">
+      <div class="vn-brand">
+        <img src="../shared/vanita-logo@2x.png" alt="VANITA ROLEPLAY" class="vn-logo">
+      </div>
+      <div class="vn-title-block">
+        <h1 class="vn-title">INVENTORY</h1>
+        <p class="vn-subtitle">YOUR ITEMS &nbsp;/&nbsp; VANITA ROLEPLAY</p>
+      </div>
+      <div class="inv-weight" id="invWeight">
+        <i class="icon" id="weightIcon"></i>
+        <div class="inv-weight-text">
+          <span class="mono" id="weightValue">0 / 0 KG</span>
+          <div class="inv-weight-track"><i id="weightFill"></i></div>
+        </div>
+      </div>
+      <button class="vn-icon-btn" id="btnClose" title="Close (ESC)"><i class="icon" id="closeIcon"></i></button>
+    </div>
+
+    <!-- ============ BODY ============ -->
+    <div class="inv-body">
+
+      <!-- Sidebar -->
+      <nav class="inv-sidebar angled-panel" id="sidebar"></nav>
+
+      <!-- Item grid -->
+      <div class="inv-main angled-panel">
+        <div class="inv-grid" id="itemGrid"></div>
+        <div class="inv-empty" id="emptyState" hidden>
+          <i class="icon" id="emptyIcon"></i>
+          <p>ไม่มีไอเทมในหมวดนี้</p>
+        </div>
+        <div class="inv-footerbar">
+          <div class="inv-pagination">
+            <button class="pg-btn" id="pgPrev"><i class="icon" id="prevIcon"></i></button>
+            <span class="mono" id="pgLabel">1 / 1</span>
+            <button class="pg-btn" id="pgNext"><i class="icon" id="nextIcon"></i></button>
+          </div>
+          <div class="view-toggle">
+            <button class="view-btn is-active" data-view="grid" id="viewGrid"><i class="icon" id="gridIcon"></i></button>
+            <button class="view-btn" data-view="list" id="viewList"><i class="icon" id="listIcon"></i></button>
+          </div>
+        </div>
+
+        <!-- Quick slots: numbered hotbar (1-5). Select an item, then click an
+             empty slot to assign it; click a filled slot to use it. -->
+        <div class="quick-slots" id="quickSlots"></div>
+      </div>
+
+      <!-- Detail panel -->
+      <aside class="inv-detail angled-panel" id="detailPanel"></aside>
+
+    </div>
+
+    <!-- ============ FOOTER: vitals + keybinds ============ -->
+    <div class="inv-footer">
+      <div class="vitals">
+        <div class="vitals-avatar"><i class="icon" id="userIcon"></i></div>
+        <div class="vitals-bars">
+          <div class="vitals-line"><i class="icon vit-health" id="vitHeartIcon"></i><div class="vitals-track"><i style="width:82%" class="vit-fill-health"></i></div></div>
+          <div class="vitals-line"><i class="icon vit-armor" id="vitShieldIcon"></i><div class="vitals-track"><i style="width:60%" class="vit-fill-armor"></i></div></div>
+          <div class="vitals-line"><i class="icon vit-stamina" id="vitBoltIcon"></i><div class="vitals-track"><i style="width:91%" class="vit-fill-stamina"></i></div></div>
+        </div>
+      </div>
+      <div class="keybinds">
+        <span><b>LMB</b> เลือก</span>
+        <span><b>E</b> ใช้</span>
+        <span><b>G</b> ให้</span>
+        <span><b>ESC</b> ปิด</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============ TOASTS ============ -->
+  <div class="toast-stack" id="toastStack"></div>
+
+  <!-- ============ GIVE MODAL ============ -->
+  <div class="vn-overlay" id="giveOverlay" hidden>
+    <div class="modal-card vn-card">
+      <button class="modal-close" id="modalClose"><i class="icon" id="modalCloseIcon"></i></button>
+
+      <!-- Step 1: player id -->
+      <div class="modal-step" id="stepId">
+        <div class="modal-item-preview" id="giveItemPreviewId"></div>
+        <h3 class="modal-title">ให้ไอเทมกับผู้เล่น</h3>
+        <p class="modal-sub">กรอกไอดีผู้เล่นที่ต้องการให้ของ</p>
+        <label class="vn-field">
+          <span>PLAYER ID</span>
+          <input type="text" inputmode="numeric" id="inputPlayerId" class="vn-input mono" placeholder="เช่น 42" autocomplete="off">
+        </label>
+        <p class="modal-error" id="idError" hidden>กรุณากรอกไอดีผู้เล่นให้ถูกต้อง</p>
+        <div class="modal-actions">
+          <button class="btn btn-ghost" id="btnIdCancel">ยกเลิก</button>
+          <button class="btn btn-primary" id="btnIdConfirm">ต่อไป</button>
+        </div>
+      </div>
+
+      <!-- Step 2: quantity -->
+      <div class="modal-step" id="stepQty" hidden>
+        <div class="modal-item-preview" id="giveItemPreviewQty"></div>
+        <h3 class="modal-title">ระบุจำนวน</h3>
+        <p class="modal-sub">ให้กับผู้เล่นไอดี <b class="mono" id="targetIdLabel">-</b></p>
+        <label class="vn-field">
+          <span>จำนวน</span>
+          <div class="vn-qty-input">
+            <input type="text" inputmode="numeric" id="inputQty" class="vn-input mono" placeholder="0">
+            <button class="vn-max-btn" id="btnQtyMax">MAX</button>
+          </div>
+        </label>
+        <p class="modal-hint mono" id="qtyAvailable">มีอยู่ 0 ชิ้น</p>
+        <p class="modal-error" id="qtyError" hidden>กรอกจำนวนให้ถูกต้อง</p>
+        <div class="modal-actions">
+          <button class="btn btn-ghost" id="btnQtyBack">ย้อนกลับ</button>
+          <button class="btn btn-primary" id="btnQtyConfirm">ให้ไอเทม</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /.game-stage -->
+
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VANITA ROLEPLAY — Prototype Hub</title>
+<meta name="description" content="รวมลิงก์ไปยังหน้า Prototype ต่าง ๆ ของ VANITA ROLEPLAY">
+<meta name="theme-color" content="#FF3155">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="shared/vanita.css">
+<script src="shared/vanita.js"></script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body oncontextmenu="return false">
+<div class="game-stage" id="gameStage">
+
+  <div class="scene"></div>
+
+  <main class="hub">
+
+    <div class="hub-brand">
+      <img src="shared/vanita-logo@2x.png" alt="VANITA ROLEPLAY" class="hub-logo">
+      <p class="hub-tagline">LOS SANTOS &middot; SAN ANDREAS</p>
+    </div>
+
+    <h1 class="hub-title">PROTOTYPE HUB</h1>
+    <p class="hub-sub">เลือกหน้า Prototype ที่ต้องการเปิดดู — ทุกหน้าใช้ Mock Data เท่านั้น ยังไม่เชื่อมกับ Server จริง</p>
+
+    <div class="hub-grid">
+
+      <a class="hub-card" href="vanita-roleplay-ui/index.html">
+        <span class="hub-card-tag hub-card-tag--live">READY</span>
+        <div class="hub-card-icon hub-card-icon--health" id="iconHud"></div>
+        <h2 class="hub-card-title">HUD Prototype</h2>
+        <p class="hub-card-desc">Blood UI, Health/Armor circle, Status icons &amp; Action Progress overlay</p>
+        <span class="hub-card-cta">เปิดหน้า <i class="icon" id="arrowHud"></i></span>
+      </a>
+
+      <a class="hub-card" href="vanita-inventory/index.html">
+        <span class="hub-card-tag hub-card-tag--live">READY</span>
+        <div class="hub-card-icon hub-card-icon--armor" id="iconInv"></div>
+        <h2 class="hub-card-title">Inventory</h2>
+        <p class="hub-card-desc">หมวดหมู่ไอเทม, Use / Give / Drop พร้อม Modal ให้ของผู้เล่นอื่น</p>
+        <span class="hub-card-cta">เปิดหน้า <i class="icon" id="arrowInv"></i></span>
+      </a>
+
+      <a class="hub-card" href="vanita-phone/index.html">
+        <span class="hub-card-tag hub-card-tag--live">READY</span>
+        <div class="hub-card-icon hub-card-icon--vehicle" id="iconPhone"></div>
+        <h2 class="hub-card-title">Phone UI</h2>
+        <p class="hub-card-desc">โทรศัพท์ในเกม — 15 แอป: ข้อความ, โทร (ปุ่มกด/รายชื่อ), ธนาคาร, โซเชียล, แผนที่ ฯลฯ</p>
+        <span class="hub-card-cta">เปิดหน้า <i class="icon" id="arrowPhone"></i></span>
+      </a>
+
+      <a class="hub-card" href="vanita-garage/index.html">
+        <span class="hub-card-tag hub-card-tag--live">READY</span>
+        <div class="hub-card-icon hub-card-icon--fuel" id="iconGarage"></div>
+        <h2 class="hub-card-title">Garage</h2>
+        <p class="hub-card-desc">จัดการยานพาหนะ ซ่อม/เติมน้ำมัน/ล้างรถ พร้อม Action Progress</p>
+        <span class="hub-card-cta">เปิดหน้า <i class="icon" id="arrowGarage"></i></span>
+      </a>
+
+    </div>
+
+    <footer class="hub-footer">
+      <span>VANITA ROLEPLAY &middot; Internal Prototype Build</span>
+    </footer>
+
+  </main>
+
+</div><!-- /.game-stage -->
+
+<script src="js/app.js"></script>
+</body>
+</html>

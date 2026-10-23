@@ -1,0 +1,267 @@
+/* =========================================================
+   VANITA ROLEPLAY — Shared design system
+   Every page links this file FIRST, then its own css/style.css
+   (which should only hold layout + page-specific components).
+========================================================= */
+
+/* ---------- Design tokens ---------- */
+:root {
+  --bg-1: #070B12;
+  --bg-2: #0A0F18;
+  --bg-3: #05080E;
+
+  --text-1: #FFFFFF;
+  --text-2: #E8EDF5;
+  --text-3: #94A3B8;
+  --text-4: #64748B;
+
+  /* Brand / accent — the ONE accent used for selection, hover, primary actions */
+  --brand: #FF3155;
+  --brand-dim: #C4192F;
+  --brand-gradient: linear-gradient(180deg, #FF4A63, #FF3155);
+  --brand-soft: rgba(255, 49, 85, 0.14);
+  --brand-line: rgba(255, 49, 85, 0.45);
+
+  /* Semantic data colors (never used as generic accent) */
+  --health: #FF3155;
+  --health-glow: #FF5B5B;
+  --armor: #4DA3FF;
+  --vehicle: #F6C945;
+  --fuel: #35D399;
+  --lockpick: #A78BFA;
+  --stamina: var(--fuel);
+  --amber: var(--vehicle);
+
+  /* Surfaces */
+  --panel-bg: rgba(10, 15, 24, 0.74);
+  --panel-bg-soft: rgba(18, 22, 31, 0.55);
+  --panel-border: rgba(232, 237, 245, 0.09);
+  --track: rgba(232, 237, 245, 0.08);
+  --ring-track: var(--track);
+
+  --radius-panel: 14px;
+  --radius: 10px;
+  --radius-sm: 8px;
+}
+
+/* ---------- Base ---------- */
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Kanit', system-ui, sans-serif;
+  background: var(--bg-3);
+  color: var(--text-2);
+}
+.mono { font-family: 'Roboto Mono', monospace; }
+
+i.icon { display: inline-flex; align-items: center; justify-content: center; line-height: 0; }
+i.icon svg { width: 1em; height: 1em; display: block; fill: currentColor; }
+
+@property --pct { syntax: '<number>'; inherits: false; initial-value: 0; }
+
+/* thin dark scrollbars everywhere */
+* { scrollbar-width: thin; scrollbar-color: rgba(232,237,245,0.18) transparent; }
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-thumb { background: rgba(232,237,245,0.18); border-radius: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+
+/* ---------- Backdrop (stand-in for the live game world) ---------- */
+.scene {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 120% 70% at 18% 8%, rgba(255, 49, 85, 0.07), transparent 55%),
+    radial-gradient(ellipse 100% 70% at 85% 95%, rgba(77, 163, 255, 0.06), transparent 55%),
+    linear-gradient(160deg, var(--bg-1) 0%, var(--bg-3) 55%, #04060a 100%);
+}
+.scene::before {
+  content: "";
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(232,237,245,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(232,237,245,0.025) 1px, transparent 1px);
+  background-size: 62px 62px;
+  mask-image: radial-gradient(ellipse 75% 75% at 50% 40%, black, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 40%, black, transparent 75%);
+}
+
+/* ---------- Panel ---------- */
+.angled-panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: var(--radius-panel);
+}
+
+/* ---------- Icon button (back / close) ---------- */
+.vn-icon-btn {
+  flex: 0 0 auto;
+  width: 36px; height: 36px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid var(--panel-border);
+  background: rgba(232, 237, 245, 0.05);
+  color: var(--text-3);
+  font-size: 13px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.vn-icon-btn:hover { color: var(--text-1); border-color: var(--brand-line); background: var(--brand-soft); }
+
+/* ---------- Page header (inventory, garage, …) ---------- */
+.vn-header {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  height: 76px;
+  padding: 0 20px 0 0;
+  overflow: hidden;
+  position: relative;
+}
+.vn-brand {
+  height: 100%;
+  width: 190px;
+  flex: 0 0 auto;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(135deg, #14171f 0%, #0a0c11 100%);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 26px) 100%, 0 100%);
+  border-right: 1px solid var(--panel-border);
+}
+.vn-logo { width: 108px; height: auto; filter: drop-shadow(0 3px 10px rgba(0,0,0,0.5)); }
+.vn-title-block { flex: 1 1 auto; min-width: 0; }
+.vn-title { margin: 0; font-size: 22px; font-weight: 600; letter-spacing: 0.04em; color: var(--text-1); }
+.vn-subtitle { margin: 2px 0 0; font-size: 10.5px; letter-spacing: 0.1em; color: var(--text-4); text-transform: uppercase; }
+.vn-header-right { display: flex; align-items: center; gap: 14px; flex: 0 0 auto; }
+
+/* compact variant — for narrow pages (e.g. phone) */
+.vn-header--compact { height: 60px; gap: 12px; }
+.vn-header--compact .vn-brand { width: 120px; clip-path: polygon(0 0, 100% 0, calc(100% - 20px) 100%, 0 100%); }
+.vn-header--compact .vn-logo { width: 78px; }
+.vn-header--compact .vn-title { font-size: 18px; }
+.vn-header--compact .vn-subtitle { font-size: 9px; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  flex: 1 1 0;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  padding: 11px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--panel-border);
+  font-family: 'Kanit', sans-serif;
+  font-size: 13px; font-weight: 500;
+  cursor: pointer;
+  background: rgba(232, 237, 245, 0.05);
+  color: var(--text-2);
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease, filter 0.15s ease;
+}
+.btn:hover { background: rgba(232, 237, 245, 0.1); }
+.btn i.icon { font-size: 13px; }
+.btn:disabled { opacity: 0.4; cursor: default; pointer-events: none; }
+.btn-primary { background: var(--brand-gradient); border-color: transparent; color: #fff; }
+.btn-primary:hover { background: var(--brand-gradient); filter: brightness(1.08); }
+.btn-secondary { background: rgba(77,163,255,0.14); border-color: rgba(77,163,255,0.35); color: #bfe0ff; }
+.btn-secondary:hover { background: rgba(77,163,255,0.22); }
+.btn-ghost { background: transparent; }
+.btn-danger-ghost { color: #ff9aa5; }
+.btn-danger-ghost:hover { background: var(--brand-soft); border-color: rgba(255,49,85,0.3); }
+
+/* ---------- Form fields ---------- */
+.vn-field { display: block; margin-bottom: 6px; }
+.vn-field > span {
+  display: block; font-size: 10.5px; letter-spacing: 0.08em;
+  color: var(--text-4); margin-bottom: 6px;
+}
+.vn-input {
+  width: 100%; padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--panel-border);
+  background: rgba(5, 8, 14, 0.7);
+  color: var(--text-1);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+.vn-input:focus { border-color: var(--brand-line); }
+.vn-qty-input { position: relative; }
+.vn-qty-input .vn-input { padding-right: 60px; }
+.vn-max-btn {
+  position: absolute; right: 5px; top: 50%; transform: translateY(-50%);
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 1px solid rgba(255,49,85,0.4);
+  background: rgba(255,49,85,0.15);
+  color: #ff9aa5;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 10.5px; font-weight: 600;
+  cursor: pointer;
+}
+.vn-max-btn:hover { background: rgba(255,49,85,0.25); }
+
+/* ---------- Overlay + card (modals, progress) ---------- */
+@keyframes vn-fade-in { from { opacity: 0; } to { opacity: 1; } }
+.vn-overlay {
+  position: fixed; inset: 0; z-index: 50;
+  background: rgba(3, 4, 6, 0.62);
+  display: flex; align-items: center; justify-content: center;
+  animation: vn-fade-in 0.15s ease;
+}
+.vn-card {
+  position: relative;
+  border-radius: var(--radius-panel);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+}
+
+/* ---------- Toasts ---------- */
+.toast-stack {
+  position: fixed; right: 22px; bottom: 22px; z-index: 60;
+  display: flex; flex-direction: column-reverse; gap: 8px;
+}
+.toast {
+  display: flex; align-items: center; gap: 10px;
+  padding: 11px 16px;
+  border-radius: var(--radius-sm);
+  background: rgba(15, 18, 26, 0.95);
+  border: 1px solid var(--panel-border);
+  border-left: 3px solid var(--fuel);
+  color: var(--text-2);
+  font-size: 12.5px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  animation: toast-in 0.25s ease, toast-out 0.3s ease 2.7s forwards;
+  max-width: 320px;
+}
+.toast.toast-error { border-left-color: var(--brand); }
+.toast i.icon { font-size: 14px; color: var(--fuel); flex: 0 0 auto; }
+.toast.toast-error i.icon { color: var(--brand); }
+@keyframes toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes toast-out { to { opacity: 0; transform: translateY(-6px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .toast { animation: none; }
+}
+
+/* =========================================================
+   Game stage — the UI is laid out on a fixed 1920x1080 "game
+   screen" and scaled to fit the window (see shared/vanita.js).
+   Every coordinate in the page CSS is therefore a real in-game
+   position. Add ?ingame to the URL (or class "is-ingame" on <html>)
+   to drop the demo backdrop and get a transparent page for CEF.
+========================================================= */
+.game-stage {
+  position: absolute; left: 50%; top: 50%;
+  width: 1920px; height: 1080px;
+  transform: translate(-50%, -50%) scale(var(--stage-scale, 1));
+  transform-origin: center center;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(232, 237, 245, 0.07);
+}
+html.is-ingame, html.is-ingame body { background: transparent; }
+html.is-ingame .scene, html.is-ingame .scene-vignette { display: none; }
+html.is-ingame .game-stage { box-shadow: none; }

@@ -1,0 +1,723 @@
+/* =========================================================
+   VANITA ROLEPLAY — HUD Prototype
+   (tokens, base, backdrop, icon button: see ../shared/vanita.css)
+========================================================= */
+html, body { height: 100%; overflow: hidden; }
+
+.scene-vignette {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  box-shadow: inset 0 0 180px 40px rgba(0,0,0,0.65);
+}
+
+/* ---------------------------------------------------------
+   Brand mark
+--------------------------------------------------------- */
+
+.brandmark {
+  position: fixed;
+  top: 24px;
+  left: 28px;
+  z-index: 5;
+  line-height: 1.1;
+  user-select: none;
+  pointer-events: none;
+}
+
+.brandmark-logo {
+  display: block;
+  width: 148px;
+  height: auto;
+  filter: drop-shadow(0 4px 14px rgba(0,0,0,0.55));
+}
+
+.brandmark-sub {
+  margin-top: 4px;
+  margin-left: 2px;
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  color: var(--text-4);
+}
+
+/* ---------------------------------------------------------
+   Glass panel base
+--------------------------------------------------------- */
+
+.action-card, .dev-panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+/* ---------------------------------------------------------
+   Player HUD — built on a fixed design grid (1 unit = --u px)
+   so every shape scales together and keeps the exact
+   proportions of the Blood UI reference.
+--------------------------------------------------------- */
+
+:root {
+  --u: 0.5333px;
+  --edge: rgba(176, 184, 200, 0.55);
+}
+
+.hud-shell {
+  position: fixed;
+  left: 26px;
+  bottom: 28px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+/* ---------------------------------------------------------
+   Quick slots — numbered hotbar (keys 1-5), stacks under the
+   main HUD panel via the hud-shell's flex column.
+--------------------------------------------------------- */
+
+.quick-slots {
+  display: flex;
+  gap: 7px;
+}
+
+.q-slot {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+  background: rgba(10, 15, 24, 0.72);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.08s ease;
+}
+
+.q-slot.is-empty { border-style: dashed; opacity: 0.55; }
+
+.q-slot-num {
+  position: absolute;
+  top: 3px;
+  left: 5px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 9px;
+  color: var(--text-4);
+}
+
+.q-slot-icon { width: 26px; height: 26px; color: var(--text-2); }
+
+.q-slot-icon svg { width: 100%; height: 100%; display: block; }
+
+.q-slot-qty {
+  position: absolute;
+  bottom: 2px;
+  right: 4px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 9px;
+  color: var(--text-3);
+}
+
+.q-slot.is-active { border-color: rgba(255, 49, 85, 0.75); box-shadow: 0 0 14px rgba(255, 49, 85, 0.45); }
+
+.q-slot.is-flash {
+  animation: qslot-flash 0.35s ease;
+}
+
+@keyframes qslot-flash {
+  0% { transform: scale(1); border-color: rgba(255, 49, 85, 0.9); box-shadow: 0 0 18px rgba(255, 49, 85, 0.65); }
+  100% { transform: scale(1); }
+}
+
+.hud {
+  position: relative;
+  width: calc(var(--u) * 1000);
+  height: calc(var(--u) * 145);
+  --ring-1: #ff2f4c;
+  --ring-2: #d21b39;
+  --ring-3: #a70f2b;
+  --ring-glow: rgba(255, 47, 76, 0.38);
+}
+
+/* -- Frame (angled outline drawn as SVG paths) -- */
+
+.hud-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.hud-frame .frame-fill { stroke: none; }
+
+.hud-frame .frame-line {
+  fill: none;
+  stroke: var(--edge);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  stroke-linejoin: miter;
+}
+
+/* -- Blood mist (critical only) -- */
+
+.hud-mist {
+  z-index: 0;
+  position: absolute;
+  inset: calc(var(--u) * -18) calc(var(--u) * -24);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  background:
+    radial-gradient(ellipse calc(var(--u) * 70) calc(var(--u) * 60) at 4% 52%, rgba(200, 22, 44, 0.75), transparent 72%),
+    radial-gradient(ellipse calc(var(--u) * 110) calc(var(--u) * 46) at 66% 50%, rgba(170, 14, 36, 0.6), transparent 72%),
+    radial-gradient(circle calc(var(--u) * 3) at 63% 38%, rgba(230, 35, 55, 0.9), transparent 100%),
+    radial-gradient(circle calc(var(--u) * 2.5) at 71% 64%, rgba(230, 35, 55, 0.85), transparent 100%),
+    radial-gradient(circle calc(var(--u) * 3.5) at 58% 60%, rgba(210, 25, 48, 0.8), transparent 100%),
+    radial-gradient(circle calc(var(--u) * 2.5) at 9% 30%, rgba(230, 35, 55, 0.85), transparent 100%),
+    radial-gradient(circle calc(var(--u) * 3) at 2% 72%, rgba(230, 35, 55, 0.8), transparent 100%);
+}
+
+.hud[data-state="critical"] .hud-mist {
+  opacity: 1;
+  animation: mist-breathe 2.6s ease-in-out infinite;
+}
+
+@keyframes mist-breathe { 0%, 100% { opacity: 0.85; } 50% { opacity: 1; } }
+
+/* -- Circular health indicator -- */
+
+.hud-circle {
+  position: absolute;
+  left: calc(var(--u) * 3.75);
+  top: calc(var(--u) * 1);
+  width: calc(var(--u) * 140);
+  height: calc(var(--u) * 140);
+  z-index: 2;
+}
+
+.circle-base {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: rgba(7, 9, 13, 0.94);
+  border: 1px solid rgba(150, 158, 172, 0.5);
+}
+
+.health-ring {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: calc(var(--u) * 117.5);
+  height: calc(var(--u) * 117.5);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: conic-gradient(from 215deg, var(--ring-1), var(--ring-2) 28%, var(--ring-3) 58%, var(--ring-2) 84%, var(--ring-1));
+  box-shadow: 0 0 calc(var(--u) * 16) var(--ring-glow);
+  transition: box-shadow 0.4s ease;
+}
+
+.ring-hole {
+  position: absolute;
+  inset: calc(var(--u) * 5.5);
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #15161b, #07080b 72%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heart-icon {
+  font-size: calc(var(--u) * 60);
+  display: inline-flex;
+  filter: drop-shadow(0 calc(var(--u) * 1.5) calc(var(--u) * 2) rgba(0, 0, 0, 0.6));
+}
+
+.heart-icon svg path { fill: url(#gHeartSilver); }
+
+.hud .heart-broken { display: none; }
+
+.heart-broken svg path { fill: url(#gHeartRed); }
+
+/* ECG spike drawn to the left of the ring (low health) */
+
+.ecg {
+  position: absolute;
+  left: calc(var(--u) * -30);
+  top: 50%;
+  width: calc(var(--u) * 40);
+  height: calc(var(--u) * 24);
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  overflow: visible;
+  filter: drop-shadow(0 0 calc(var(--u) * 4) rgba(255, 51, 82, 0.9));
+}
+
+.ecg polyline {
+  fill: none;
+  stroke: #ff3352;
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/* Healing "+" (green) */
+
+.heal-plus {
+  position: absolute;
+  left: calc(var(--u) * 121);
+  top: calc(var(--u) * 106);
+  font-size: calc(var(--u) * 30);
+  color: #45e08f;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+  filter: drop-shadow(0 0 calc(var(--u) * 6) rgba(69, 224, 143, 0.9));
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.heal-plus svg { fill: currentColor; }
+
+/* -- State: low (25–50) -- */
+
+.hud[data-state="low"] { --ring-glow: rgba(255, 47, 76, 0.7); }
+
+.hud[data-state="low"] .heart-icon:not(.heart-broken) svg path { fill: url(#gHeartPink); }
+
+.hud[data-state="low"] .health-ring { box-shadow: 0 0 calc(var(--u) * 26) var(--ring-glow); }
+
+.hud[data-state="low"] .ecg { opacity: 1; }
+
+/* -- State: critical (< 25) -- */
+
+.hud[data-state="critical"] { --ring-glow: rgba(255, 47, 76, 0.9); }
+
+.hud[data-state="critical"] .heart-normal { display: none; }
+
+.hud[data-state="critical"] .heart-broken { display: inline-flex; }
+
+.hud[data-state="critical"] .health-ring {
+  box-shadow: 0 0 calc(var(--u) * 34) var(--ring-glow);
+  animation: ring-breathe 1.4s ease-in-out infinite;
+}
+
+@keyframes ring-breathe {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.03); }
+}
+
+/* -- State: healing (temporary) -- */
+
+.hud[data-healing="true"] {
+  --ring-1: #45e08f;
+  --ring-2: #23b86d;
+  --ring-3: #178a52;
+  --ring-glow: rgba(69, 224, 143, 0.6);
+}
+
+.hud[data-healing="true"] .heart-normal { display: inline-flex; }
+
+.hud[data-healing="true"] .hud .heart-broken { display: none; }
+
+.hud[data-healing="true"] .heart-icon:not(.heart-broken) svg path { fill: url(#gHeartSilver); }
+
+.hud[data-healing="true"] .ecg { opacity: 0; }
+
+.hud[data-healing="true"] .hud-mist { opacity: 0; }
+
+.hud[data-healing="true"] .health-ring { animation: none; }
+
+.hud[data-healing="true"] .heal-plus { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+/* -- Health / Armor bars -- */
+
+.bar {
+  position: absolute;
+  left: calc(var(--u) * 149.25);
+  width: calc(var(--u) * 416);
+  height: calc(var(--u) * 23.5);
+  z-index: 1;
+}
+
+.bar-health { top: calc(var(--u) * 40); }
+
+.bar-armor  { top: calc(var(--u) * 76.5); }
+
+.bar-track,
+.bar-track::before,
+.bar-fill {
+  position: absolute;
+}
+
+.bar-track {
+  inset: 0;
+  background: rgba(150, 158, 172, 0.32);
+}
+
+.bar-track::before {
+  content: "";
+  inset: 1px;
+  background: #101318;
+}
+
+.bar-health .bar-track,
+.bar-health .bar-track::before,
+.bar-health .bar-fill {
+  clip-path: polygon(0 0, calc(100% - var(--u) * 12) 0, 100% 50%, calc(100% - var(--u) * 12) 100%, calc(var(--u) * 12) 100%);
+}
+
+.bar-armor .bar-track,
+.bar-armor .bar-track::before,
+.bar-armor .bar-fill {
+  clip-path: polygon(calc(var(--u) * 7) 0, calc(100% - var(--u) * 12) 0, 100% 50%, calc(100% - var(--u) * 12) 100%, 0 100%);
+}
+
+.bar-fill {
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 75%;
+  transition: width 0.35s ease;
+}
+
+.bar-health .bar-fill {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.24) 0%, rgba(255,255,255,0.08) 42%, rgba(0,0,0,0.14) 43%, rgba(0,0,0,0.3) 100%),
+    linear-gradient(90deg, #b2122d 0%, #dc2340 50%, #ff2f47 100%);
+}
+
+.bar-armor .bar-fill {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.26) 0%, rgba(255,255,255,0.08) 42%, rgba(0,0,0,0.12) 43%, rgba(0,0,0,0.26) 100%),
+    linear-gradient(90deg, #3a69a6 0%, #4d84c4 55%, #6a9dd9 100%);
+}
+
+.bar-value {
+  position: absolute;
+  right: calc(var(--u) * 327);
+  height: calc(var(--u) * 24);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  white-space: nowrap;
+  line-height: 1;
+  font-family: 'Kanit', sans-serif;
+  font-size: max(12px, calc(var(--u) * 23));
+  z-index: 1;
+}
+
+.bar-value b { font-weight: 600; color: #fff; }
+
+.bar-value span { font-weight: 300; color: #a3abb8; margin-left: 0.28em; }
+
+.value-health { top: calc(var(--u) * 39.75); }
+
+.value-armor  { top: calc(var(--u) * 76.25); }
+
+/* -- Status icon cluster -- */
+
+.status-item {
+  position: absolute;
+  top: calc(var(--u) * 48.5);
+  width: calc(var(--u) * 45);
+  height: calc(var(--u) * 60);
+  z-index: 1;
+}
+
+.status-item[data-stat="hunger"]  { left: calc(var(--u) * 724.2); }
+
+.status-item[data-stat="thirst"]  { left: calc(var(--u) * 781.8); }
+
+.status-item[data-stat="armor"]   { left: calc(var(--u) * 839.2); }
+
+.status-item[data-stat="stamina"] { left: calc(var(--u) * 896.8); }
+
+.status-badge {
+  width: calc(var(--u) * 45);
+  height: calc(var(--u) * 45);
+  border-radius: 50%;
+  border: max(1px, calc(var(--u) * 2)) solid rgba(128, 137, 152, 0.75);
+  background: radial-gradient(circle at 50% 35%, rgba(24, 27, 34, 0.9), rgba(8, 10, 14, 0.9));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.35s ease;
+}
+
+.status-badge i.icon { font-size: calc(var(--u) * 27); }
+
+.status-badge svg path { fill: url(#gIcon); }
+
+.status-item[data-stat="armor"] .status-badge svg path { fill: url(#gShield); }
+
+.status-underline {
+  position: absolute;
+  left: calc(var(--u) * 2);
+  top: calc(var(--u) * 52.3);
+  width: calc(var(--u) * 41);
+  height: max(2px, calc(var(--u) * 5));
+  border-radius: 999px;
+  background: #3a3f4a;
+  overflow: hidden;
+}
+
+.status-underline i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #c9d6ee, #aebbd4);
+  transition: width 0.35s ease, background 0.35s ease;
+}
+
+.status-item.is-low .status-badge { border-color: rgba(255, 91, 91, 0.75); }
+
+.status-item.is-low .status-underline i { background: linear-gradient(90deg, #ff6b6b, #ff3b57); }
+
+/* -- Identity + money (small line under the HUD) -- */
+
+.hud-info {
+  margin-left: calc(var(--u) * 149);
+  width: calc(var(--u) * 524);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.8);
+}
+
+.hud-info-id { display: flex; align-items: baseline; gap: 8px; }
+
+.hud-name { font-size: 13px; font-weight: 500; color: var(--text-1); }
+
+.hud-tag { font-size: 11px; color: var(--text-4); }
+
+.hud-info-money { display: flex; gap: 16px; }
+
+.money-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-2); }
+
+.money-item i { font-size: 11px; color: var(--vehicle); opacity: 0.85; }
+
+/* ---------------------------------------------------------
+   Action Progress UI
+--------------------------------------------------------- */
+
+.action-row {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 5;
+  display: flex;
+  gap: 14px;
+}
+
+.action-card {
+  border-radius: 12px;
+  padding: 12px 16px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 108px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.action-ring {
+  --pct: 0;
+  --ring-color: var(--text-3);
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: conic-gradient(var(--ring-color) calc(var(--pct) * 3.6deg), var(--ring-track) 0deg);
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--ring-color) 45%, transparent));
+  transition: --pct 0.6s ease, filter 0.3s ease;
+}
+
+.action-ring-inner {
+  position: absolute;
+  inset: 6px;
+  border-radius: 50%;
+  background: var(--bg-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+}
+
+.action-ring-inner i { font-size: 14px; color: var(--text-1); }
+
+.action-pct { font-size: 13px; font-weight: 500; color: var(--text-1); }
+
+.action-label {
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+  text-align: center;
+}
+
+.action-underline {
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ring-color, var(--text-3));
+}
+
+.action-card[data-color="medkit"]   .action-ring, .action-card[data-color="medkit"]   .action-underline { --ring-color: var(--health); }
+
+.action-card[data-color="armor"]    .action-ring, .action-card[data-color="armor"]    .action-underline { --ring-color: var(--armor); }
+
+.action-card[data-color="vehicle"]  .action-ring, .action-card[data-color="vehicle"]  .action-underline { --ring-color: var(--vehicle); }
+
+.action-card[data-color="fuel"]     .action-ring, .action-card[data-color="fuel"]     .action-underline { --ring-color: var(--fuel); }
+
+.action-card[data-color="lockpick"] .action-ring, .action-card[data-color="lockpick"] .action-underline { --ring-color: var(--lockpick); }
+
+/* ---------------------------------------------------------
+   Dev / Prototype control drawer
+--------------------------------------------------------- */
+
+.dev-drawer {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.dev-panel {
+  width: 230px;
+  max-height: 1000px;
+  overflow-y: auto;
+  border-radius: var(--radius-panel);
+  padding: 14px 16px 16px;
+  display: none;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  border-style: dashed;
+}
+
+.dev-panel.open { display: block; }
+
+.dev-panel-head--sub {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--panel-border);
+}
+
+.dev-panel-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--text-3);
+  margin-bottom: 12px;
+}
+
+.dev-panel-tag {
+  font-size: 9px;
+  color: var(--text-4);
+  font-style: italic;
+}
+
+.dev-field { margin-bottom: 10px; }
+
+.dev-field label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10.5px;
+  color: var(--text-3);
+  margin-bottom: 4px;
+}
+
+.dev-field label em {
+  font-style: normal;
+  color: var(--text-1);
+  font-family: 'Roboto Mono', monospace;
+}
+
+.dev-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--ring-track);
+  outline: none;
+}
+
+.dev-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--text-1);
+  cursor: pointer;
+  border: 2px solid var(--bg-2);
+}
+
+.dev-range::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--text-1);
+  cursor: pointer;
+  border: 2px solid var(--bg-2);
+}
+
+.dev-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.dev-btn {
+  flex: 1 1 auto;
+  font-family: 'Kanit', sans-serif;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  padding: 8px 6px;
+  border-radius: 8px;
+  border: 1px solid var(--panel-border);
+  background: rgba(232,237,245,0.06);
+  color: var(--text-2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.dev-btn:hover { background: rgba(232,237,245,0.12); color: var(--text-1); }
+
+.dev-btn-ghost { background: transparent; }
+
+/* ---------------------------------------------------------
+   Responsive — the HUD scales via --u; the action row moves to
+   the right edge on narrower game resolutions so they never overlap
+--------------------------------------------------------- */
+
+
+
+
+
+
+
+/* Respect reduced motion */
+
+@media (prefers-reduced-motion: reduce) {
+  .hud[data-state="critical"] .health-ring,
+  .hud[data-state="critical"] .hud-mist {
+    animation: none;
+  }
+}

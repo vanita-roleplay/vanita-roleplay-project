@@ -1,0 +1,153 @@
+html, body { height: 100%; overflow: hidden; }
+/* =========================================================
+   VANITA ROLEPLAY — Prototype Hub
+   (tokens, base, backdrop: see shared/vanita.css)
+========================================================= */
+/* ---------------------------------------------------------
+   Layout
+--------------------------------------------------------- */
+
+.hub {
+  position: absolute; z-index: 1;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  width: 980px;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.hub-brand { display: flex; flex-direction: column; align-items: center; gap: 6px; margin-bottom: 28px; }
+
+.hub-logo { width: 150px; height: auto; filter: drop-shadow(0 6px 18px rgba(0,0,0,0.5)); }
+
+.hub-tagline { margin: 0; font-size: 10.5px; letter-spacing: 0.22em; color: var(--text-4); }
+
+.hub-title {
+  margin: 0 0 10px;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-1);
+}
+
+.hub-sub {
+  margin: 0 0 40px;
+  max-width: 520px;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--text-3);
+}
+
+/* ---------------------------------------------------------
+   Card grid
+--------------------------------------------------------- */
+
+.hub-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.hub-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  text-decoration: none;
+  color: inherit;
+  padding: 24px 22px;
+  border-radius: var(--radius-panel);
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  overflow: hidden;
+  transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+}
+
+.hub-card::before {
+  content: "";
+  position: absolute; inset: 0;
+  background: radial-gradient(circle at 85% -10%, rgba(255,255,255,0.06), transparent 55%);
+  pointer-events: none;
+}
+
+.hub-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255, 49, 85, 0.4);
+  background: rgba(14, 19, 28, 0.74);
+}
+
+.hub-card:hover .hub-card-cta { color: var(--text-1); }
+
+.hub-card:hover .hub-card-cta i.icon { transform: translateX(3px); }
+
+.hub-card--soon { cursor: default; opacity: 0.55; }
+
+.hub-card--soon:hover { transform: none; border-color: var(--panel-border); background: var(--panel-bg); }
+
+.hub-card-tag {
+  position: absolute; top: 16px; right: 16px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  padding: 3px 8px;
+  border-radius: 999px;
+}
+
+.hub-card-tag--live { color: var(--fuel); background: rgba(53, 211, 153, 0.14); border: 1px solid rgba(53, 211, 153, 0.35); }
+
+.hub-card-tag--soon { color: var(--text-4); background: rgba(232,237,245,0.06); border: 1px solid var(--panel-border); }
+
+.hub-card-icon {
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  margin-bottom: 16px;
+}
+
+.hub-card-icon svg { width: 1em; height: 1em; fill: currentColor; }
+
+.hub-card-icon--health { background: rgba(232,237,245,0.07); color: var(--text-2); }
+
+.hub-card-icon--armor { background: rgba(232,237,245,0.07); color: var(--text-2); }
+
+.hub-card-icon--vehicle { background: rgba(232,237,245,0.07); color: var(--text-2); }
+
+.hub-card-icon--fuel { background: rgba(232,237,245,0.07); color: var(--text-2); }
+
+.hub-card-title { margin: 0 0 6px; font-size: 17px; font-weight: 600; color: var(--text-1); }
+
+.hub-card-desc { margin: 0 0 18px; font-size: 12.5px; line-height: 1.6; color: var(--text-3); flex: 1 1 auto; }
+
+.hub-card-cta {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 12.5px; font-weight: 500;
+  color: var(--text-2);
+  transition: color 0.2s ease;
+}
+
+.hub-card-cta i.icon { font-size: 11px; transition: transform 0.2s ease; }
+
+.hub-card-cta--soon { color: var(--text-4); }
+
+.hub-footer {
+  margin-top: 48px;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--text-4);
+}
+
+/* ---------------------------------------------------------
+   Responsive
+--------------------------------------------------------- */
+
+
+
+.hub-card:hover .hub-card-icon { background: var(--brand-soft); color: var(--brand); }
